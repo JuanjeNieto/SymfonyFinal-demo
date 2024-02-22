@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+  
+{% block title %}song{% endblock %}
+  
+{% block body %}
+    <div class="container">
+        <h2 class="text-center mt-5 mb-3">Show song</h2>
+        <div class="card">
+            <div class="card-header">
+                <a class="btn btn-outline-info float-right" href="{{ path('app_song_index') }}"> 
+                    View All songs
+                </a>
+            </div>
+            <div class="card-body">
+                <b class="text-muted">Name:</b>
+                <p>{{ song.name }}</p>
+                <b class="text-muted">artist:</b>
+                <p>{{ song.artist }}</p>
+               
+        </div>
+    </div>
+{% endblock %}
