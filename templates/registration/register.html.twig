@@ -2,51 +2,25 @@
 
 {% block title %}Register{% endblock %}
 
-{% block stylesheets %}
-    {{ parent() }}
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{{ asset('registration/styles-register.css') }}">
-{% endblock %}
-
 {% block body %}
     <div class="container">
-        <h1>Register</h1>
+        <h1 class="mb-4">Register</h1>
 
-        {{ form_start(registrationForm) }}
-
-        <form method="post">
-            {{ form_errors(registrationForm) }}
-
-            <div class="form-group">
-                {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control'}}) }}
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                {{ form_start(registrationForm, {'attr': {'class': 'register-form'}}) }}
+                    <div class="form-group">
+                        {{ form_row(registrationForm.email, {'attr': {'class': 'form-control', 'placeholder': 'Email'}}) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_row(registrationForm.plainPassword, {'attr': {'class': 'form-control', 'placeholder': 'Password'}}) }}
+                    </div>
+                    <div class="form-group form-check">
+                        {{ form_row(registrationForm.agreeTerms, {'label_attr': {'class': 'form-check-label'}, 'attr': {'class': 'form-check-input'}}) }}
+                    </div>
+                    <button type="submit" class="btn btn-primary">Register</button>
+                {{ form_end(registrationForm) }}
             </div>
-            <div class="form-group">
-                {# Aquí está el campo de contraseña #}
-                {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'form-control', 'type': 'password'}, 'label': 'Password'}) }}
-                {# Este campo es para mostrar la contraseña #}
-                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="togglePassword(this)">Show Password</button>
-            </div>
-            <div class="form-group form-check">
-                {{ form_widget(registrationForm.agreeTerms, {'attr': {'class': 'form-check-input'}, 'label_attr': {'class': 'form-check-label'}}) }}
-                {{ form_label(registrationForm.agreeTerms, 'Agree to terms', {'label_attr': {'class': 'form-check-label'}}) }}
-            </div>
-
-            <button type="submit" class="btn btn-primary">Register</button>
-        </form>
-
-        {{ form_end(registrationForm) }}
+        </div>
     </div>
-
-    <script>
-        function togglePassword(button) {
-            var passwordField = document.getElementById("{{ registrationForm.plainPassword.vars.id }}");
-            if (passwordField.type === "password") {
-                passwordField.type = "text";
-                button.textContent = "Hide Password";
-            } else {
-                passwordField.type = "password";
-                button.textContent = "Show Password";
-            }
-        }
-    </script>
 {% endblock %}
