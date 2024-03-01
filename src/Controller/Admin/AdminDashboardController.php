@@ -16,19 +16,19 @@ class AdminDashboardController extends AbstractDashboardController
     #[Route('/admin', name: 'admin')]
     public function index(): Response
     {
-        return parent::index();
-    }
+        if ($this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY')) {
+            return $this->render('security/login.html.twig', ['last_username' => 'admin'])
+        }
+        $routerBuilder = $this->container->get(AdminUrlGenerator::class);
+        $url = $routerBuilder->setController(UserCrudController::class)->generateUrl();
 
-    public function configureDashboard(): Dashboard
-    {
-        return Dashboard::new()
-            ->setTitle('Probar Resena');
+        return $this->redirect($url);
     }
 
     public function configureMenuItems(): iterable
     {
-        yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
-        yield MenuItem::linkToCrud('The Label', 'fas fa-list', User::class);
-        yield MenuItem::linkToCrud('The Label', 'fas fa-list', Song::class);
+       
+        yield MenuItem::linkToCrud('Users', 'fas fa-user', User::class);
+        yield MenuItem::linkToCrud('Songs', 'fas fa-music', Song::class);
     }
 }
