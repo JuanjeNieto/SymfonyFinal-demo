@@ -16,9 +16,9 @@ class AdminDashboardController extends AbstractDashboardController
     #[Route('/admin', name: 'admin')]
     public function index(): Response
     {
-        if ($this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY')) {
-            return $this->render('security/login.html.twig', ['last_username' => 'admin'])
-        }
+        // if ($this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY')) {
+        //     return $this->render('security/login.html.twig', ['last_username' => 'admin'])
+        // }
         $routerBuilder = $this->container->get(AdminUrlGenerator::class);
         $url = $routerBuilder->setController(UserCrudController::class)->generateUrl();
 
