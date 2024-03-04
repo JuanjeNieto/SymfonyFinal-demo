@@ -21,7 +21,7 @@ class SongCrudController extends AbstractCrudController
         return [
             IdField::new('id'),
             TextField::new('name'),
-            TextEditorField::new('artist'),
+            TextField::new('artist'),
         ];
     }
     
