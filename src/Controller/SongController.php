@@ -7,6 +7,7 @@ use App\Form\SongType;
 use App\Repository\SongRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -15,10 +16,13 @@ use Symfony\Component\Routing\Attribute\Route;
 class SongController extends AbstractController
 {
     #[Route('/', name: 'app_song_index', methods: ['GET'])]
-    public function index(SongRepository $songRepository): Response
+    public function index(SongRepository $songRepository, UserInterface $user): Response
     {
+
+        $songs = $songRepository->findBy(['user' => $user]);
+        
         return $this->render('song/index.html.twig', [
-            'songs' => $songRepository->findAll(),
+            'songs' => $songs,
         ]);
     }
 
@@ -26,6 +30,12 @@ class SongController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $song = new Song();
+
+        // Obtenemos el usuario actual
+        $user = $this->getUser();
+        // Asignamos el usuario actual a la canción
+        $song->setUser($user);
+
         $form = $this->createForm(SongType::class, $song);
         $form->handleRequest($request);
 

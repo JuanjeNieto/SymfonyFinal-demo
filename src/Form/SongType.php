@@ -14,7 +14,6 @@ class SongType extends AbstractType
         $builder
             ->add('name')
             ->add('artist')
-            ->add('genre')
         ;
     }
 

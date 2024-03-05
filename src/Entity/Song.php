@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\SongRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SongRepository::class)]
@@ -20,8 +19,9 @@ class Song
     #[ORM\Column(length: 255)]
     private ?string $artist = null;
 
-    #[ORM\Column(type: Types::ARRAY)]
-    private array $genre = [];
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
 
     public function getId(): ?int
     {
@@ -52,14 +52,14 @@ class Song
         return $this;
     }
 
-    public function getGenre(): array
+    public function getUser(): ?User
     {
-        return $this->genre;
+        return $this->user;
     }
 
-    public function setGenre(array $genre): static
+    public function setUser(?User $user): static
     {
-        $this->genre = $genre;
+        $this->user = $user;
 
         return $this;
     }
