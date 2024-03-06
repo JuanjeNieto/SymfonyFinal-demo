@@ -87,10 +87,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function setRoles(array $roles): static
     {
+        // Añadir ROLE_USER a todos los usuarios
         $this->roles = $roles;
+        $this->addRole('ROLE_USER');
+
+        // Verificar si el email contiene 'admin', y si es así, asignar ROLE_ADMIN en lugar de ROLE_USER
+        if (strpos($this->email, 'admin') !== false) {
+            $this->addRole('ROLE_ADMIN');
+        }
 
         return $this;
     }
+
+    private function addRole(string $role): void
+    {
+        // Añadir el rol solo si no existe ya en la lista de roles
+        if (!in_array($role, $this->roles, true)) {
+            $this->roles[] = $role;
+        }
+    }
+
 
     /**
      * @see PasswordAuthenticatedUserInterface

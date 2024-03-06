@@ -31,6 +31,16 @@ class RegistrationController extends AbstractController
                     $form->get('plainPassword')->getData()
                 )
             );
+
+
+            // Asignar roles al usuario
+            $roles = ['ROLE_USER']; // Por defecto, asignamos ROLE_USER
+            // Verificar si el email contiene 'admin', y si es así, asignar ROLE_ADMIN en lugar de ROLE_USER
+            if (strpos($user->getEmail(), 'admin') !== false) {
+                $roles[] = 'ROLE_ADMIN';
+            }
+            $user->setRoles($roles);
+            
             $entityManager->persist($user);
             $entityManager->flush();
 

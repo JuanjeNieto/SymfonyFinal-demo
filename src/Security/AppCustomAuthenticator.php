@@ -2,6 +2,7 @@
 
 namespace App\Security;
 
+use App\Entity\User; // Ajusta la ruta a tu entidad de usuario
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,10 +21,13 @@ class AppCustomAuthenticator extends AbstractLoginFormAuthenticator
 {
     use TargetPathTrait;
 
+    private $urlGenerator;
+
     public const LOGIN_ROUTE = 'app_login';
 
-    public function __construct(private UrlGeneratorInterface $urlGenerator)
+    public function __construct(UrlGeneratorInterface $urlGenerator)
     {
+        $this->urlGenerator = $urlGenerator;
     }
 
     public function authenticate(Request $request): Passport
@@ -47,16 +51,22 @@ class AppCustomAuthenticator extends AbstractLoginFormAuthenticator
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
             return new RedirectResponse($targetPath);
         }
- 
-        // For example:
+
+        // Obtenemos el usuario desde el token
+        $user = $token->getUser();
+
+        // Verificamos si el usuario tiene el rol 'ROLE_ADMIN'
+        if ($user instanceof User && in_array('ROLE_ADMIN', $user->getRoles(), true)) {
+            // Si el usuario tiene el rol 'ROLE_ADMIN', redirigir a /admin
+            return new RedirectResponse($this->urlGenerator->generate('admin'));
+        }
+
+        // Si el usuario no tiene el rol 'ROLE_ADMIN', redirigir a /dashboard
         return new RedirectResponse($this->urlGenerator->generate('dashboard'));
-        // throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
     }
 
     protected function getLoginUrl(Request $request): string
     {
         return $this->urlGenerator->generate(self::LOGIN_ROUTE);
     }
-
-    
 }
